@@ -1,0 +1,215 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// --- Enums ---
+
+enum Role {
+  ADMIN
+  DIRECTOR
+  REGIONAL_MANAGER
+  EXECUTIVE
+  BACKOFFICE
+}
+
+enum ContractType {
+  PFP
+  COMMERCIAL
+  HYBRID
+}
+
+enum ParameterType {
+  TTC_LISTA
+  TTC_PROMO
+  PRESSAO
+  TPR_EXTRA
+}
+
+enum ProposalStatus {
+  DRAFT
+  INTERNAL_REVIEW
+  SENT_TO_CLIENT
+  APPROVED
+  REJECTED
+}
+
+enum FundType {
+  CALENDAR
+  EXTRA
+  AGING
+}
+
+enum LedgerEntryType {
+  CREDIT_INGEST
+  DEBIT_PROPOSAL
+  DEBIT_TP_MANUAL
+}
+
+enum ReconStatus {
+  OPEN
+  MATCHED
+  DISPUTE
+}
+
+// --- Models ---
+
+model User {
+  id              String   @id @default(uuid())
+  email           String   @unique
+  name            String
+  role            Role
+  hierarchyNodeId String?  // Flexible link to Region/Directorate ID
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  proposals       Proposal[]
+  fundsOwned      Fund[]   @relation("FundOwner")
+}
+
+model ProductSKU {
+  skuCode         String  @id
+  description     String
+  brand           String
+  packaging       String
+  category        String
+  hlPerPac        Decimal @db.Decimal(10, 6)
+  pacPerPallet    Int
+  active          Boolean @default(true)
+
+  pricingEntries  PricingTable[]
+  calendarRules   CalendarRule[]
+  proposalItems   ProposalItem[]
+  reconciliations Reconciliation[]
+
+  @@map("products_sku")
+}
+
+model Customer {
+  id           String       @id @default(uuid())
+  sapId        String       @unique
+  name         String
+  channel      String
+  regionId     String
+  contractType ContractType
+  
+  pricingTables PricingTable[]
+  proposals     Proposal[]
+
+  @@map("customers")
+}
+
+model CalendarRule {
+  id            String        @id @default(uuid())
+  period        DateTime      // First day of month
+  skuCode       String
+  regionId      String        // Scope
+  parameterType ParameterType
+  value         Decimal       @db.Decimal(12, 2)
+  version       Int           @default(1)
+  
+  product       ProductSKU    @relation(fields: [skuCode], references: [skuCode])
+
+  @@map("calendar_rules")
+}
+
+model PricingTable {
+  id            String   @id @default(uuid())
+  period        DateTime
+  customerId    String
+  skuCode       String
+  priceRegular  Decimal  @db.Decimal(10, 2)
+  pricePromo    Decimal  @db.Decimal(10, 2)
+  taxesJson     Json     // Stores detailed tax breakdown
+  
+  customer      Customer   @relation(fields: [customerId], references: [id])
+  product       ProductSKU @relation(fields: [skuCode], references: [skuCode])
+
+  @@map("pricing_tables")
+}
+
+model Proposal {
+  id              String         @id @default(uuid())
+  customerId      String
+  executiveId     String
+  period          DateTime
+  status          ProposalStatus @default(DRAFT)
+  version         Int            @default(1)
+  totalVolumeHl   Decimal        @db.Decimal(12, 4)
+  totalInvestment Decimal        @db.Decimal(14, 2)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  customer        Customer       @relation(fields: [customerId], references: [id])
+  executive       User           @relation(fields: [executiveId], references: [id])
+  items           ProposalItem[]
+
+  @@map("proposals")
+}
+
+model ProposalItem {
+  id             String   @id @default(uuid())
+  proposalId     String
+  skuCode        String
+  volumeCases    Int
+  volumeHl       Decimal  @db.Decimal(12, 4)
+  priceFinal     Decimal  @db.Decimal(10, 2)
+  discountApplied Decimal @db.Decimal(10, 2)
+  sourceMapping  Json     // JSON defining how much came from Calendar vs Extra
+  
+  proposal       Proposal @relation(fields: [proposalId], references: [id])
+  product        ProductSKU @relation(fields: [skuCode], references: [skuCode])
+  reconciliation Reconciliation?
+
+  @@map("proposal_items")
+}
+
+model Fund {
+  id          String   @id @default(uuid())
+  externalId  String?  // From Excel "ID FUNDO"
+  name        String
+  type        FundType
+  ownerId     String?  // Region or User ID
+  year        Int
+  
+  owner       User?    @relation("FundOwner", fields: [ownerId], references: [id])
+  ledgerEntries LedgerEntry[]
+
+  @@map("funds")
+}
+
+model LedgerEntry {
+  id            String          @id @default(uuid())
+  fundId        String
+  type          LedgerEntryType
+  amount        Decimal         @db.Decimal(14, 2)
+  referenceId   String?         // ID of Proposal or Source
+  bookingDate   DateTime        @default(now())
+
+  fund          Fund            @relation(fields: [fundId], references: [id])
+
+  @@map("ledger_entries")
+}
+
+model Reconciliation {
+  id                 String     @id @default(uuid())
+  proposalItemId     String     @unique
+  skuCode            String
+  actualVolumeCases  Int
+  actualPrice        Decimal    @db.Decimal(10, 2)
+  investmentGenerated Decimal   @db.Decimal(14, 2)
+  investmentSpent    Decimal    @db.Decimal(14, 2)
+  difference         Decimal    @db.Decimal(14, 2)
+  status             ReconStatus
+  
+  proposalItem       ProposalItem @relation(fields: [proposalItemId], references: [id])
+  product            ProductSKU   @relation(fields: [skuCode], references: [skuCode])
+
+  @@map("reconciliations")
+}
