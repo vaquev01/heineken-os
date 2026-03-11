@@ -383,8 +383,8 @@ export default function NegotiationPage() {
                 </div>
 
                 {/* TABLE */}
-                <div className="rounded-xl border border-slate-800 bg-slate-900/30 overflow-hidden shadow-2xl">
-                    <Table>
+                <div className="rounded-xl border border-slate-800 bg-slate-900/30 overflow-x-auto shadow-2xl custom-scrollbar">
+                    <Table className="min-w-[800px]">
                         <TableHeader className="bg-slate-950/80 backdrop-blur border-b border-slate-800">
                             <TableRow className="hover:bg-transparent border-none">
                                 <TableHead className="w-[50px] text-center"><Checkbox className="border-slate-600" /></TableHead>

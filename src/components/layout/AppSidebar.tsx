@@ -9,8 +9,10 @@ import {
   Wallet,
   Settings,
   LogOut,
-  Star
+  Star,
+  Search
 } from "lucide-react";
+import { CommandMenu } from "./CommandMenu";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
@@ -42,6 +44,19 @@ export function AppSidebar() {
             <h1 className="text-xl font-bold tracking-tight text-white leading-none">Heineken OS</h1>
             <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider mt-1">Off Trade Sales</p>
           </div>
+        </div>
+      </div>
+
+      <div className="px-4 pb-2">
+        <div className="flex items-center justify-between px-3 py-2 bg-slate-900/50 border border-slate-800 rounded-lg text-slate-400 group cursor-pointer hover:bg-slate-800 hover:text-slate-300 transition-colors">
+            <div className="flex items-center gap-2 text-sm font-medium">
+                <Search className="h-4 w-4" />
+                <span>Buscar...</span>
+            </div>
+            <div className="flex items-center gap-1">
+                <kbd className="bg-slate-800 border border-slate-700 rounded px-1.5 text-[10px] font-mono text-slate-400 group-hover:text-slate-300">⌘</kbd>
+                <kbd className="bg-slate-800 border border-slate-700 rounded px-1.5 text-[10px] font-mono text-slate-400 group-hover:text-slate-300">K</kbd>
+            </div>
         </div>
       </div>
 

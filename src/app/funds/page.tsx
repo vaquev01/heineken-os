@@ -157,7 +157,7 @@ export default function FundsPage() {
             </div>
 
             {/* KPI CARDS */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Card className="bg-slate-950/40 backdrop-blur-md border-slate-800/60 shadow-lg group">
                     <CardContent className="pt-6">
                         <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Orçamento Total</p>
@@ -278,8 +278,8 @@ export default function FundsPage() {
                             <CardTitle className="text-white">Performance por Executivo</CardTitle>
                             <CardDescription className="text-slate-400">Ranking de gestão de budget</CardDescription>
                         </CardHeader>
-                        <CardContent>
-                            <Table>
+                        <CardContent className="overflow-x-auto custom-scrollbar">
+                            <Table className="min-w-[600px]">
                                 <TableHeader>
                                     <TableRow className="border-slate-800 hover:bg-transparent">
                                         <TableHead className="text-slate-400">Executivo</TableHead>

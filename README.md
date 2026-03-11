@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Heineken OS - Off Trade Sales
+*Operating System for Sales Management*
 
-## Getting Started
+O **Heineken OS** é um sistema centralizado para Executivos de Vendas do canal Auto Serviço (Off Trade). Diferente de dashboards convencionais, ele atua como um verdadeiro sistema operacional, conectando ingestão de dados, acompanhamento visual de metas, e governança financeira na mesma plataforma.
 
-First, run the development server:
+## 🚀 Funcionalidades Principais
 
+1. **Dashboard Executivo (One Page)**
+   - Garrafa de atingimento (Real vs Meta)
+   - Performance de Marcas (Share of Volume)
+   - Lista de Riscos (Hunter/Cockpit) com base em gaps de positivação
+
+2. **Simulador de Negociação (Desktop & iPad)**
+   - Conversão em tempo real de Caixas -> HL -> Pallets -> Caminhões.
+   - Cálculo automático de Verba Liberada (Sell-in) x Tabela de Preços.
+   - Projeção de investimento PFP e Contrato.
+
+3. **Governança de Fundos (Conta Corrente)**
+   - Acompanhamento do Budget Total vs Gasto Realizado.
+   - Distribuição de verba por cliente (Network).
+   - Ranking de eficiência da equipe executiva.
+
+4. **Central de Ingestão de Dados**
+   - Upload de planilhas Excel reais (Calendário, Paletização, Tabela de Preços).
+   - Parser automático para alimentar o Zustand Data Store.
+
+5. **Interface Premium (OS Feel)**
+   - Tema escuro imersivo (Dark Mode).
+   - "Command Menu" acessível via `Cmd+K` para busca global (SKUs, Clientes, Módulos).
+   - Hierarquia organizacional baseada em visibilidade estrita (Gerentes veem executivos, não vice-versa).
+
+## 💻 Tech Stack
+- **Framework:** Next.js 16 (App Router)
+- **Styling:** Tailwind CSS + \`shadcn/ui\`
+- **State Management:** Zustand
+- **Animations:** Framer Motion
+- **Icons:** Lucide React
+- **Data Parsing:** SheetJS (xlsx)
+
+## 🛠️ Como Executar
+
+### Pré-requisitos
+- Node.js 18.17+ 
+
+### Instalação
 ```bash
+# 1. Clone o repositório
+git clone https://github.com/vaquev01/heineken-os.git
+
+# 2. Acesse a pasta do projeto
+cd heineken-os
+
+# 3. Instale as dependências
+npm install
+
+# 4. Inicie o servidor de desenvolvimento
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abra [http://localhost:3000](http://localhost:3000) no seu navegador ou iPad.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📱 Dicas de Navegação
+- Pressione `Cmd + K` (ou `Ctrl + K` no Windows) em qualquer tela para abrir a busca global.
+- No simulador de propostas, teste simular descontos maiores que a "Tabela" e veja o alerta de rentabilidade.
+- Na Central de Upload, o sistema já conta com dados mockados de alta fidelidade rodando em tempo real.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+*Heineken OS V2 - Focus on Self-Service Execs.*
